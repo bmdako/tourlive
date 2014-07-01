@@ -2,7 +2,8 @@
   <head>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css'>
-    <meta name="viewport" content="width=100%, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <!-- <meta name="viewport" content="width=100%, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     * {box-sizing:border-box}
     body{background:#151924;color:#fff;font-family:"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;font-weight:300}
@@ -161,8 +162,8 @@
 
       function fromToday(item) {
         var pubDate = new Date($(item).find('pubDate').text());
-        return isToday(pubDate);
-        //return isToday(pubDate, 5); // <---- TESTING REMOVE!!!! TODO
+        //return isToday(pubDate);
+        return isToday(pubDate, 5); // <---- TESTING REMOVE!!!! TODO
       }
 
       function fromYesterday(item) {
@@ -187,13 +188,14 @@
         // Only add if they haven't already been added.
         if ($('.tdf-feed-items').find('#' + id).length === 0) {
           $('.tdf-feed-items').prepend(
-            '<div id="' + id + '" class="tdf-feed-item">' +
+            $('<div id="' + id + '" class="tdf-feed-item">' +
               '<div class="header">' +
                 '<div class="title">' + title + '</div>' +
                 '<div class="pubDate"><img src="./time.png" class="timeicon"/> ' + pubDateDisplay + '</div>' +
               '</div>' +
               '<p class="description">' + description + '</p>' +
-            '</div>'); 
+            '</div>').hide());
+          $('#'+id).show().css({top: 0, opacity: 0}).animate({top: 50, opacity: 1}, 'slow');
         }
       }
       start();
