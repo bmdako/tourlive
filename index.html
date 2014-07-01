@@ -1,7 +1,8 @@
 <html>
   <head>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=100%, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <style>
     * {box-sizing:border-box}
     body{background:#151924;color:#fff;font-family:"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;font-weight:300}
@@ -41,15 +42,23 @@
       width: 0%;
       height: 5px;
       background-color: #fab000;
+      opacity: 0.5;
+      animation-duration: 10s;
       -webkit-animation-duration: 10s;
-      -webkit-animation-name: progress-bar;
+      -moz-animation-duration: 10s;
+      animation-name: progressbar;
+      -webkit-animation-name: progressbar;
+      -moz-animation-name: progressbar;
+      animation-timing-function: linear;
       -webkit-animation-timing-function: linear;
+      -moz-animation-timing-function: linear;
+      animation-iteration-count: infinite;
       -webkit-animation-iteration-count: infinite;
+      -moz-animation-iteration-count: infinite;
     }
 
-    @-webkit-keyframes progress-bar {
+    @-keyframes progressbar {
       from {
-        width: 0%; 
       }
 
       95% {
@@ -58,29 +67,51 @@
       }
 
       to {
-        opacity: 0.1;
         width: 100%;
+        opacity: 0.1;
       }
     }
 
-    .progress-indicator {
-      background-color: grey;
-      width: 0%;
-      display: block;
-      height: inherit;
+    @-webkit-keyframes progressbar {
+      from {
+      }
+
+      95% {
+        width: 100%;
+        opacity: 1;
+      }
+
+      to {
+        width: 100%;
+        opacity: 0.1;
+      }
     }
-        /*transition-duration: 10s;*/
+
+    @-moz-keyframes progressbar {
+      from {
+      }
+
+      95% {
+        width: 100%;
+        opacity: 1;
+      }
+
+      to {
+        width: 100%;
+        opacity: 0.1;
+      }
+    }
     </style>
   </head>
   <body>
     <div class="tourlive">
+      <div id="tdf-progress-bar"></div>
       <div class="tdf-not-live" style="display: none;">
         <h1>Ingen live opdatering fra Tour de France p&aring; nuv&aelig;rende tidspunkt</h1>
         <hr>
         <h2 class="tour-consecutive-days">Sidste live opdatering<h2>
       </div>
       <div class="tdf-live">
-        <div id="tdf-progress-bar"></div>
         <h1>Live opdatering fra dagens etape</h1>
       </div>
       <div class="tdf-feed-items"></div>
@@ -91,7 +122,9 @@
       function start() {
         getFeedData(); // Fething once before everyting sets in motion.
         var e = document.getElementById("tdf-progress-bar");
+        e.addEventListener("animationIteration", getFeedData, false);
         e.addEventListener("webkitAnimationIteration", getFeedData, false);
+        e.addEventListener("mozAnimationIteration", getFeedData, false);
         e.className = "progress-bar";
       }
 
@@ -128,8 +161,8 @@
 
       function fromToday(item) {
         var pubDate = new Date($(item).find('pubDate').text());
-        //return isToday(pubDate);
-        return isToday(pubDate, 5); // <---- TESTING REMOVE!!!! TODO
+        return isToday(pubDate);
+        //return isToday(pubDate, 5); // <---- TESTING REMOVE!!!! TODO
       }
 
       function fromYesterday(item) {
