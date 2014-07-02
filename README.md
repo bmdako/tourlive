@@ -32,9 +32,9 @@ Når feed'et behandles sker følgende:
 
 Teksten øverst på siden afhænger af forskellige parametre:
 
-1. Hvis der er items fra dags dato, vises teksten *Live opdatering fra dagens etape*
+1. Hvis der er items fra dags dato, vises teksten *Live opdatering fra dagens etape*.
 2. Hvis der ikke er nogle items fra dags dato, vises teksten *Ingen live opdatering fra Tour de France på nuværende tidspunkt*.
-  * Hvis dags dato **ikke** er første dag på Tour'en (eller tidligere), vises også *Live opdatering fra i går*
+  * Hvis dags dato **ikke** er første dag på Tour'en (eller tidligere), vises også *Live opdatering fra i går*.
 
 De tre filer `index.html`, `logic.js` og `styles.css` skal uploades til en webserver som serverer statisk indhold.
 Dette kan være en S3 bucket eller www.b.dk/helpers/. Dette skal gøres af Casper Bruun eller Mark Nellemann.
