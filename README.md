@@ -31,6 +31,7 @@ Når feed'et behandles sker følgende:
 3. Findes der ingen items fra dags dato, indsættes items fra dagen forinden.
 
 Teksten øverst på siden afhænger af forskellige parametre:
+
 1. Hvis der er items fra dags dato, vises teksten *Live opdatering fra dagens etape*
 2. Hvis der ikke er nogle items fra dags dato, vises teksten *Ingen live opdatering fra Tour de France på nuværende tidspunkt*.
   * Hvis dags dato **ikke** er første dag på Tour'en (eller tidligere), vises også *Live opdatering fra i går*
