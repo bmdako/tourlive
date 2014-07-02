@@ -34,9 +34,10 @@ Teksten øverst på siden afhænger af forskellige parametre:
   * Hvis dags dato **ikke** er første dag på Tour'en (eller tidligere), vises også *Live opdatering fra i går*
 
 De tre filer `index.html`, `logic.js` og `styles.css` skal uploades til en webserver som serverer statisk indhold.
-Dette kan være en S3 bucket eller www.b.dk/helpers/.
+Dette kan være en S3 bucket eller www.b.dk/helpers/. Dette skal gøres af Casper Bruun eller Mark Nellemann.
+Når dette er sket, modtages en URL fra dem.
 
-Url på siden skal sendes til følgende personer:
+Denne URL skal sendes til følgende personer:
 * Kevin Walsh for inkludering i BT's desktop website
 * Sergey Sokurenko for inkludering i BT's mobil website
 * Mads Roland for inkludering i BT's iOS App.
