@@ -2,7 +2,7 @@ tourlive
 ========
 
 Dette er en simple statisk HTML side til visning af RSS feed fra feltet.dk.
-Siden skal integreres i andre BT's websider (desktop og mobil) ved brug af <iframe>.
+Siden skal integreres i andre BT's websider (desktop og mobil) ved brug af \<iframe\>.
 Siden skal også integreres i BT iOS App'en som *custom content*.
 
 Dette er en simpel - dog lidt autonom - løsning, som
