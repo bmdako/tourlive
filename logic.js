@@ -40,8 +40,8 @@ function displayFeedData( data ) {
 
 function fromToday(item) {
   var pubDate = new Date($(item).find('pubDate').text());
-  return isToday(pubDate);
-  //return isToday(pubDate, 5); // <---- TESTING REMOVE!!!! TODO
+  //return isToday(pubDate);
+  return isToday(pubDate, 6); // <---- TESTING REMOVE!!!! TODO
 }
 
 function fromYesterday(item) {
@@ -66,12 +66,14 @@ function prependItem (index, item) {
   // Only add if they haven't already been added.
   if ($('.tdf-feed-items').find('#' + id).length === 0) {
     $('.tdf-feed-items').prepend(
-      '<div id="' + id + '" class="tdf-feed-item">' +
+      $('<div id="' + id + '" class="tdf-feed-item">' +
         '<div class="header">' +
           '<div class="title">' + title + '</div>' +
           '<div class="pubDate"><img src="./time.png" class="timeicon"/> ' + pubDateDisplay + '</div>' +
         '</div>' +
         '<p class="description">' + description + '</p>' +
-      '</div>'); 
+      '</div>').hide());
+    //$('#'+id).show().css({top: 0, opacity: 0}).animate({top: 50, opacity: 1}, 'slow');
+    $('#'+id).slideDown("slow");
   }
 }
