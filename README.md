@@ -15,11 +15,13 @@ Casper har set en regel op som henter feed'et ca. en gang i minuttet og placerer
 Feed'et er et RSS feed og består af en række *items* med **titel**, **dato** og **beskrivelse** af begivenheden.
 
 Ved load af siden sker følgende:
+
 1. Feed'et hentes og behandles.
 2. Der sættes en progress-bar igang som løber uendeligt i 10 sekunders iterationer.
 3. Hver gang progress-bar har fuldført en iteration, hentes feed'et og behandles.
 
 Når feed'et behandles sker følgende:
+
 1. Feed'et hentes.
 2. Alle items fra dags dato findes.
   * Items indsættes efterhånden som de modtages i feed'et.
