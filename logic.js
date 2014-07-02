@@ -71,7 +71,7 @@ function prependItem (index, item) {
           '<div class="title">' + title + '</div>' +
           '<div class="pubDate"><img src="./time.png" class="timeicon"/> ' + pubDateDisplay + '</div>' +
         '</div>' +
-        '<p class="description">' + description + '</p>' +
+        '<div class="description">' + description + '</div>' +
       '</div>').hide());
     //$('#'+id).show().css({top: 0, opacity: 0}).animate({top: 50, opacity: 1}, 'slow');
     $('#'+id).slideDown("slow");

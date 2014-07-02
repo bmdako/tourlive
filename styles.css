@@ -20,7 +20,8 @@ nav{width:100%;text-align:center}
 
 /* Below are the custom CSS rules for this page only. Above are the rules already on the site. */
 body{margin: 0px;}
-.tourlive h1,h2,p{margin: 5px 8px 30px 8px;}
+.tourlive{margin-top: 10px;}
+.tourlive h1,h2,.description{margin: 5px 8px 30px 8px;}
 .tourlive h1{font-size: 1.4em;}
 .tourlive h2{font-size: 1.2em;}
 .tourlive hr{border-top: 1px dashed gray; border-bottom: 0px;}
@@ -31,6 +32,8 @@ body{margin: 0px;}
 .tdf-feed-item .description {color:#eeeeee; margin-top: 20px; margin-bottom: 35px; line-height: 1.5; }
 
 .progress-bar {
+  position: fixed;
+  top: 0px;
   border: none;
   display: block;
   width: 0%;
