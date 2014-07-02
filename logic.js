@@ -1,3 +1,8 @@
+var firstDayOfTour = new Date(2014,6,5);
+var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
+//var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
+//var feedUrl = './FeltetLive_rss.xml';
+
 function start() {
   getFeedData(false); // Fething once before everyting sets in motion.
   var e = document.getElementById("tdf-progress-bar");
@@ -7,13 +12,6 @@ function start() {
   e.className = "progress-bar";
 }
 
-/* Before the Tour starts, the page will be a countdown timer.
-So we don't need to take care of dates prior the first day of the Tour. */
-var firstDayOfTour = new Date(2014,6,5);
-var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
-//var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
-//var feedUrl = './FeltetLive_rss.xml';
-//Used for testing. The value can be set equal to days to go backwards
 
 function progressEvent (e) {
   getFeedData(true);
@@ -35,7 +33,7 @@ function getFeedData( showAnimation ) {
       $('.tdf-live').show();
 
     } else {
-      itemsFromYesterday = items.filter(fromYesterday)
+      var itemsFromYesterday = items.filter(fromYesterday)
       if (itemsFromYesterday.length > 0) {
         $(itemsFromYesterday).each(prependItemWithoutAnimation);
       }
