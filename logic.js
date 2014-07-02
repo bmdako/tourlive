@@ -1,47 +1,58 @@
 function start() {
-  getFeedData(); // Fething once before everyting sets in motion.
+  getFeedData(false); // Fething once before everyting sets in motion.
   var e = document.getElementById("tdf-progress-bar");
-  e.addEventListener("animationIteration", getFeedData, false);
-  e.addEventListener("webkitAnimationIteration", getFeedData, false);
-  e.addEventListener("mozAnimationIteration", getFeedData, false);
+  e.addEventListener("animationIteration", progressEvent, false);
+  e.addEventListener("webkitAnimationIteration", progressEvent, false);
+  e.addEventListener("mozAnimationIteration", progressEvent, false);
   e.className = "progress-bar";
 }
 
 /* Before the Tour starts, the page will be a countdown timer.
 So we don't need to take care of dates prior the first day of the Tour. */
 var firstDayOfTour = new Date(2014,6,5);
+//var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
+//var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
+var feedUrl = './FeltetLive_rss.xml';
+//Used for testing. The value can be set equal to days to go backwards
 
-function getFeedData (e) {
-  //$.get( "http://www.b.dk/helpers/feeds/FeltetLive_rss.xml", function( data ) {
-  //$.get( "http://www.feltet.dk/live/FeltetLive_rss.xml", function( data ) {
-  $.get('./FeltetLive_rss.xml', displayFeedData);
+function progressEvent (e) {
+  getFeedData(true);
 }
 
-function displayFeedData( data ) {
-  var items = $(data).find('item').toArray().reverse(),
-      itemsFromToday = items.filter(fromToday);
+function getFeedData( showAnimation ) {
+  $.get(feedUrl, function (data) {
+    var items = $(data).find('item').toArray().reverse(),
+        itemsFromToday = items.filter(fromToday);
 
-  if (itemsFromToday.length > 0) {
-    $(itemsFromToday).each(prependItem);
-    $('.tdf-not-live').hide();
-    $('.tdf-live').show();
-  } else {
-    $('.tdf-not-live' ).show();
-    $('.tdf-live').hide();
-    if (isToday(firstDayOfTour)) {
-      $('.tour-consecutive-days').hide();
+    if (itemsFromToday.length > 0) {
+      if (showAnimation) {
+        $(itemsFromToday).each(prependItemWithAnimation);
+      } else {
+        $(itemsFromToday).each(prependItemWithoutAnimation);
+      }
+
+      $('.tdf-not-live').hide();
+      $('.tdf-live').show();
+
+    } else {
+      itemsFromYesterday = items.filter(fromYesterday)
+      if (itemsFromYesterday.length > 0) {
+        $(itemsFromYesterday).each(prependItemWithoutAnimation);
+      }
+      
+      if (isToday(firstDayOfTour) || firstDayOfTour > Date.now()) {
+        $('.tour-consecutive-days').hide();
+      }
+
+      $('.tdf-not-live' ).show();
+      $('.tdf-live').hide();
     }
-    itemsFromYesterday = items.filter(fromYesterday)
-    if (itemsFromYesterday.length > 0) {
-      $(itemsFromYesterday).each(prependItem);
-    }
-  }
+  });
 }
 
 function fromToday(item) {
   var pubDate = new Date($(item).find('pubDate').text());
-  //return isToday(pubDate);
-  return isToday(pubDate, 6); // <---- TESTING REMOVE!!!! TODO
+  return isToday(pubDate);
 }
 
 function fromYesterday(item) {
@@ -55,7 +66,18 @@ function isToday(date, minus) {
   return now.getYear() === date.getYear() && now.getMonth() === date.getMonth() && now.getDate() === date.getDate();
 }
 
-function prependItem (index, item) {
+function prependItemWithAnimation (index, item) {
+  prependItem(item, true);
+}
+
+function prependItemWithoutAnimation (index, item) {
+  prependItem(item, false);
+}
+
+function parseItem (item) {
+}
+
+function prependItem (item, showAnimation) {
   var title = $(item).find('title').text(),
       description = $(item).find('description').text(),
       pubDate = new Date($(item).find('pubDate').text()),
@@ -64,7 +86,7 @@ function prependItem (index, item) {
       id = guid.substring(guid.indexOf('g=') + 2);
 
   // Only add if they haven't already been added.
-  if ($('.tdf-feed-items').find('#' + id).length === 0) {
+  if ($('.tdf-feed-items').find('#' + id).length == 0) {
     $('.tdf-feed-items').prepend(
       $('<div id="' + id + '" class="tdf-feed-item">' +
         '<div class="header">' +
@@ -73,7 +95,10 @@ function prependItem (index, item) {
         '</div>' +
         '<div class="description">' + description + '</div>' +
       '</div>').hide());
-    //$('#'+id).show().css({top: 0, opacity: 0}).animate({top: 50, opacity: 1}, 'slow');
-    $('#'+id).slideDown("slow");
+    if (showAnimation) {
+      $('#'+id).slideDown("slow");
+    } else {
+      $('#'+id).show();
+    }
   }
 }
