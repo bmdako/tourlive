@@ -36,7 +36,7 @@ Teksten øverst på siden afhænger af forskellige parametre:
 2. Hvis der ikke er nogle items fra dags dato, vises teksten *Ingen live opdatering fra Tour de France på nuværende tidspunkt*.
   * Hvis dags dato **ikke** er første dag på Tour'en (eller tidligere), vises også *Live opdatering fra i går*.
 
-De tre filer `index.html`, `logic.js` og `styles.css` skal uploades til en webserver som serverer statisk indhold.
+De fire filer `index.html`, `logic.js`, `styles.css` og `time.png` skal uploades til en webserver som serverer statisk indhold.
 Dette kan være en S3 bucket eller www.b.dk/helpers/. Dette skal gøres af Casper Bruun eller Mark Nellemann.
 Når dette er sket, modtages en URL fra dem.
 
