@@ -10,9 +10,9 @@ function start() {
 /* Before the Tour starts, the page will be a countdown timer.
 So we don't need to take care of dates prior the first day of the Tour. */
 var firstDayOfTour = new Date(2014,6,5);
-//var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
+var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
 //var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
-var feedUrl = './FeltetLive_rss.xml';
+//var feedUrl = './FeltetLive_rss.xml';
 //Used for testing. The value can be set equal to days to go backwards
 
 function progressEvent (e) {
