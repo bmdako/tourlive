@@ -1,5 +1,11 @@
+/*******************************************************************************
+Copyright (c) 2014, Berlingske Media A/S
+All rights reserved.
+*******************************************************************************/
 var firstDayOfTour = new Date(2014,6,5);
-var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
+var feedUrl = 'http://www.b.dk/helpers/feeds-getter/bem-wordpress-content.s3.amazonaws.php?file=FeltetLive_rss.xml&mobile=false ';
+//var feedUrl = 'http://tourlive.boxen.nu/feed.xml';
+//var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
 //var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
 //var feedUrl = './FeltetLive_rss.xml';
 
@@ -49,12 +55,12 @@ function getFeedData( showAnimation ) {
 }
 
 function fromToday(item) {
-  var pubDate = new Date($(item).find('pubDate').text());
+  var pubDate = new Date($(item).find('pubDate').text().replace(' CEST', ''));
   return isToday(pubDate);
 }
 
 function fromYesterday(item) {
-  var pubDate = new Date($(item).find('pubDate').text());
+  var pubDate = new Date($(item).find('pubDate').text().replace(' CEST', ''));
   return isToday(pubDate, 1);
 }
 
@@ -75,11 +81,16 @@ function prependItemWithoutAnimation (index, item) {
 function parseItem (item) {
 }
 
+function formatDate(date) {
+   return date.getDate() + '.' + (date.getMonth() + 1) + '. ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+}
+
 function prependItem (item, showAnimation) {
   var title = $(item).find('title').text(),
       description = $(item).find('description').text(),
-      pubDate = new Date($(item).find('pubDate').text()),
-      pubDateDisplay = pubDate.getDate() + 1 + '.' + pubDate.getMonth() + '. ' + pubDate.getHours() + ':' + pubDate.getMinutes(),
+      pubDate = new Date($(item).find('pubDate').text().replace(' CEST', '')),
+      // pubDateDisplay = pubDate.getDate() + '.' + (pubDate.getMonth() + 1) + '. ' + pubDate.getHours() + ':' + pubDate.getMinutes(),
+      pubDateDisplay = formatDate(pubDate),
       guid = $(item).find('guid').text(),
       id = guid.substring(guid.indexOf('g=') + 2);
 
