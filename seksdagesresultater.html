@@ -6,24 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript">
-      var firstDayOfEvent = new Date('Jul 05 2014'),
-          feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
+      var firstDayOfEvent = new Date('Jan 29 2015'),
+          feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_bt_result_rss.xml';
     </script>
     <script type="text/javascript" src="./logic.js"></script>
   </head>
-  <body onload="start()" class="tour">
+  <body onload="start()" class="seksdagesresultater">
     <div id="reload-progress-bar"></div>
     <div class="event-not-started" style="display: none;">
-      <h1>Ingen live opdatering fra Tour de France p&aring; nuv&aelig;rende tidspunkt</h1>
+      <h1>Her vil du kunne se resultater fra 6-dagesl&oslash;bet der starter d. 29. Januar</h1>
     </div>
     <div class="event-not-live" style="display: none;">
-      <h1>Ingen live opdatering fra Tour de France p&aring; nuv&aelig;rende tidspunkt</h1>
+      <h1>Ingen live opdatering fra 6-dagesl&oslash;bet p&aring; nuv&aelig;rende tidspunkt</h1>
       <hr>
       <h2>Live opdatering fra i g&aring;r<h2>
     </div>
     <div class="event-live" style="display: none;">
-      <h1>Live opdatering fra dagens etape</h1>
+      <h1>Live opdatering fra dagens l&oslash;b</h1>
     </div>
     <div class="feed-items"></div>
   </body>
 </html>
+

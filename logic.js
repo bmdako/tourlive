@@ -2,54 +2,64 @@
 Copyright (c) 2014, Berlingske Media A/S
 All rights reserved.
 *******************************************************************************/
-var firstDayOfTour = new Date(2014,6,5);
-var feedUrl = 'http://www.b.dk/helpers/feeds-getter/bem-wordpress-content.s3.amazonaws.php?file=FeltetLive_rss.xml&mobile=false ';
-//var feedUrl = 'http://tourlive.boxen.nu/feed.xml';
-//var feedUrl = 'http://www.b.dk/helpers/feeds/FeltetLive_rss.xml';
-//var feedUrl = 'http://www.feltet.dk/live/FeltetLive_rss.xml';
-//var feedUrl = './FeltetLive_rss.xml';
+
+var eventStarted = isToday(firstDayOfEvent) || firstDayOfEvent < Date.now();
 
 function start() {
-  getFeedData(false); // Fething once before everyting sets in motion.
-  var e = document.getElementById("tdf-progress-bar");
+
+  // Fetching the feed once (without animations) before everyting sets in motion.
+  getFeedData(false);
+
+  // Adding CSS class to our progress bar element.
+  // This binds the CSS animation, but also the event-listener that triggers the feed reload.
+  var e = document.getElementById("reload-progress-bar");
   e.addEventListener("animationIteration", progressEvent, false);
   e.addEventListener("webkitAnimationIteration", progressEvent, false);
   e.addEventListener("mozAnimationIteration", progressEvent, false);
   e.className = "progress-bar";
 }
 
-
+// This function is called for every animation iteration. It reloads the feed.
 function progressEvent (e) {
   getFeedData(true);
 }
 
 function getFeedData( showAnimation ) {
   $.get(feedUrl, function (data) {
-    var items = $(data).find('item').toArray().reverse(),
-        itemsFromToday = items.filter(fromToday);
 
-    if (itemsFromToday.length > 0) {
-      if (showAnimation) {
-        $(itemsFromToday).each(prependItemWithAnimation);
+    var items = $(data).find('item').toArray().reverse();
+
+    if (eventStarted) {
+
+      var itemsFromToday = items.filter(fromToday),
+          itemsFromYesterday = items.filter(fromYesterday);
+
+      if (itemsFromToday.length > 0) {
+
+        if (showAnimation) {
+          $(itemsFromToday).each(insertItemWithAnimation);
+        } else {
+          $(itemsFromToday).each(insertItemWithoutAnimation);
+        }
+
+        $('.event-not-started').hide();
+        $('.event-not-live').hide();
+        $('.event-live').show();
+
       } else {
-        $(itemsFromToday).each(prependItemWithoutAnimation);
+        
+        $(itemsFromYesterday).each(insertItemWithoutAnimation);
+       
+        $('.event-not-started').hide();
+        $('.event-not-live').show();
+        $('.event-live').hide();
       }
-
-      $('.tdf-not-live').hide();
-      $('.tdf-live').show();
 
     } else {
-      var itemsFromYesterday = items.filter(fromYesterday)
-      if (itemsFromYesterday.length > 0) {
-        $(itemsFromYesterday).each(prependItemWithoutAnimation);
-      }
       
-      if (isToday(firstDayOfTour) || firstDayOfTour > Date.now()) {
-        $('.tour-consecutive-days').hide();
-      }
-
-      $('.tdf-not-live' ).show();
-      $('.tdf-live').hide();
+      $('.event-not-started').show();
+      $('.event-not-live').hide();
+      $('.event-live').hide();
     }
   });
 }
@@ -70,15 +80,12 @@ function isToday(date, minus) {
   return now.getYear() === date.getYear() && now.getMonth() === date.getMonth() && now.getDate() === date.getDate();
 }
 
-function prependItemWithAnimation (index, item) {
+function insertItemWithAnimation (index, item) {
   prependItem(item, true);
 }
 
-function prependItemWithoutAnimation (index, item) {
+function insertItemWithoutAnimation (index, item) {
   prependItem(item, false);
-}
-
-function parseItem (item) {
 }
 
 function formatDate(date) {
@@ -95,9 +102,9 @@ function prependItem (item, showAnimation) {
       id = guid.substring(guid.indexOf('g=') + 2);
 
   // Only add if they haven't already been added.
-  if ($('.tdf-feed-items').find('#' + id).length == 0) {
-    $('.tdf-feed-items').prepend(
-      $('<div id="' + id + '" class="tdf-feed-item">' +
+  if ($('.feed-items').find('#' + id).length == 0) {
+    $('.feed-items').prepend(
+      $('<div id="' + id + '" class="feed-item">' +
         '<div class="header">' +
           '<div class="title">' + title + '</div>' +
           '<div class="pubDate"><img src="./time.png" class="timeicon"/> ' + pubDateDisplay + '</div>' +
@@ -110,4 +117,12 @@ function prependItem (item, showAnimation) {
       $('#'+id).show();
     }
   }
+}
+
+function getQueryParameterByName(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  //return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\/+/g, ''));
 }
