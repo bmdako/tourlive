@@ -3,12 +3,12 @@ Copyright (c) 2014, Berlingske Media A/S
 All rights reserved.
 *******************************************************************************/
 
-var eventStarted = isToday(firstDayOfEvent) || firstDayOfEvent < Date.now();
-
-function start() {
+function start () {
 
   // Fetching the feed once (without animations) before everyting sets in motion.
-  getFeedData(false);
+  getFeedData(function (items) {
+    logic(items, false);
+  });
 
   // Adding CSS class to our progress bar element.
   // This binds the CSS animation, but also the event-listener that triggers the feed reload.
@@ -21,63 +21,83 @@ function start() {
 
 // This function is called for every animation iteration. It reloads the feed.
 function progressEvent (e) {
-  getFeedData(true);
-}
-
-function getFeedData( showAnimation ) {
-  $.get(feedUrl, function (data) {
-
-    var items = $(data).find('item').toArray().reverse();
-
-    if (eventStarted) {
-
-      var itemsFromToday = items.filter(fromToday),
-          itemsFromYesterday = items.filter(fromYesterday);
-
-      if (itemsFromToday.length > 0) {
-
-        if (showAnimation) {
-          $(itemsFromToday).each(insertItemWithAnimation);
-        } else {
-          $(itemsFromToday).each(insertItemWithoutAnimation);
-        }
-
-        $('.event-not-started').hide();
-        $('.event-not-live').hide();
-        $('.event-live').show();
-
-      } else {
-        
-        $(itemsFromYesterday).each(insertItemWithoutAnimation);
-       
-        $('.event-not-started').hide();
-        $('.event-not-live').show();
-        $('.event-live').hide();
-      }
-
-    } else {
-      
-      $('.event-not-started').show();
-      $('.event-not-live').hide();
-      $('.event-live').hide();
-    }
+  getFeedData(function (items) {
+    logic(items, true);
   });
 }
 
-function fromToday(item) {
-  var pubDate = new Date($(item).find('pubDate').text().replace(' CEST', ''));
-  return isToday(pubDate);
+function getFeedData (callback) {
+  $.get(feedUrl, function (data) {
+    var items = $(data).find('item').toArray().reverse();
+    callback(items);
+  });
 }
 
-function fromYesterday(item) {
-  var pubDate = new Date($(item).find('pubDate').text().replace(' CEST', ''));
-  return isToday(pubDate, 1);
+function logic (items, showAnimation) {
+
+  var eventStarted = dateEquals(firstDayOfEvent, new Date()) || firstDayOfEvent < Date.now();
+
+  var itemsFromToday = items.filter(fromToday),
+      //itemsFromYesterday = items.filter(fromYesterday),
+      itemsFromEarlierInEvent = items.filter(fromEarlierInEvent);
+
+  // If event is started and there's items from today, we're live from the event.
+  if (eventStarted && itemsFromToday.length > 0) {
+
+    if (showAnimation) {
+      $(itemsFromToday).each(insertItemWithAnimation);
+    } else {
+      $(itemsFromToday).each(insertItemWithoutAnimation);
+    }
+
+    $('.event-not-started').hide();
+    $('.event-not-live').hide();
+    $('.event-live').show();
+
+  // Else, if event is started and there's from earlier in the event, we'll show the previous items.
+  } else if (eventStarted && itemsFromEarlierInEvent.length > 0) {
+      
+    $(itemsFromEarlierInEvent).each(insertItemWithoutAnimation);
+   
+    $('.event-not-started').hide();
+    $('.event-not-live').show();
+    $('.event-live').hide();
+
+  // Else, the event is not yet started so we'll show nothing.
+  } else {
+    
+    $('.event-not-started').show();
+    $('.event-not-live').hide();
+    $('.event-live').hide();
+  }
 }
 
-function isToday(date, minus) {
+function fromToday (item) {
+  var pubDate = getPubDate(item);
+  return dateEquals(pubDate, new Date());
+}
+
+function fromYesterday (item) {
+  var pubDate = getPubDate(item);
   var now = new Date();
-  if (minus) now.setDate(now.getDate() - minus);
-  return now.getYear() === date.getYear() && now.getMonth() === date.getMonth() && now.getDate() === date.getDate();
+  now.setDate(now.getDate() - 1);
+  return dateEquals(pubDate, now);
+}
+
+function fromEarlierInEvent (item) {
+  var pubDate = getPubDate(item);
+  return !dateEquals(pubDate, new Date()) && pubDate > firstDayOfEvent;
+}
+
+function getPubDate (item) {
+  return new Date($(item).find('pubDate').text().replace(' CEST', ''));
+}
+
+function dateEquals (date1, date2) {
+  if (date2 === undefined) date2 = new Date();
+  return date1.getYear() === date2.getYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
 }
 
 function insertItemWithAnimation (index, item) {
@@ -88,7 +108,7 @@ function insertItemWithoutAnimation (index, item) {
   prependItem(item, false);
 }
 
-function formatDate(date) {
+function formatDate (date) {
    return date.getDate() + '.' + (date.getMonth() + 1) + '. ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
 }
 
@@ -96,7 +116,6 @@ function prependItem (item, showAnimation) {
   var title = $(item).find('title').text(),
       description = $(item).find('description').text(),
       pubDate = new Date($(item).find('pubDate').text().replace(' CEST', '')),
-      // pubDateDisplay = pubDate.getDate() + '.' + (pubDate.getMonth() + 1) + '. ' + pubDate.getHours() + ':' + pubDate.getMinutes(),
       pubDateDisplay = formatDate(pubDate),
       guid = $(item).find('guid').text(),
       id = guid.substring(guid.indexOf('g=') + 2);
@@ -119,7 +138,7 @@ function prependItem (item, showAnimation) {
   }
 }
 
-function getQueryParameterByName(name) {
+function getQueryParameterByName (name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
       results = regex.exec(location.search);
