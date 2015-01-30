@@ -30,6 +30,12 @@ hr {border-top: 1px dashed gray; border-bottom: 0px;}
 .feed-item .description {color:#eeeeee;line-height: 20px;padding-right: 8px;padding-left: 8px;}
 .feed-item .description a {color:#90a4da;}
 
+img
+{
+  width: 100%;
+  height: auto;
+}
+
 .progress-bar {
   position: fixed;
   top: 0px;
