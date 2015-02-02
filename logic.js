@@ -55,9 +55,12 @@ function logic (items, showAnimation) {
     $('.event-live').show();
 
   // Else, if event is started and there's from earlier in the event, we'll show the previous items.
-  } else if (eventStarted && itemsFromEarlierInEvent.length > 0) {
-      
-    $(itemsFromEarlierInEvent).each(insertItemWithoutAnimation);
+  } else if (eventStarted) {
+
+    if (itemsFromEarlierInEvent.length > 0) {
+      $(itemsFromEarlierInEvent).each(insertItemWithoutAnimation);
+      $('.earlier-items').show();
+    }
    
     $('.event-not-started').hide();
     $('.event-not-live').show();
